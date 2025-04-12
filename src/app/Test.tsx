@@ -9,6 +9,7 @@ interface ApiData {
 interface ApiResponse {
   data: ApiData;
 }
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Test() {
   const [data, setData] = useState<ApiData | null>(null);
@@ -17,7 +18,7 @@ export default function Test() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('https://test-express-app-delta.vercel.app');
+        const res = await fetch(apiUrl);
         if (!res.ok) {
           throw new Error('Network response was not ok');
         }
