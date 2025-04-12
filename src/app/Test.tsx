@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
-type ApiResponse = {
-  data: {
-    email: string;
-    // add more fields if your API returns more
-  };
-};
+interface ApiData {
+  email: string;
+}
+
+interface ApiResponse {
+  data: ApiData;
+}
 
 export default function Test() {
-  const [data, setData] = useState<ApiResponse['data'] | null>(null);
-  const [error, setError] = useState<string>(''); // store dynamic error message
+  const [data, setData] = useState<ApiData | null>(null);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,8 +23,12 @@ export default function Test() {
         }
         const json: ApiResponse = await res.json();
         setData(json.data);
-      } catch (err: any) {
-        setError(err.message || 'Unknown error');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
         console.error('Fetch error:', err);
       }
     };
@@ -31,13 +36,8 @@ export default function Test() {
     fetchData();
   }, []);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
