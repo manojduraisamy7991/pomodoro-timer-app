@@ -9,7 +9,8 @@ interface ApiData {
 interface ApiResponse {
   data: ApiData;
 }
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 
 export default function Test() {
   const [data, setData] = useState<ApiData | null>(null);
